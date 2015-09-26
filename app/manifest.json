@@ -25,10 +25,11 @@
   "options_page": "options.html",
   "options_ui": {
     "page": "options.html",
-    "chrome_style": true
+    "chrome_style": true,
+    "open_in_tab": true
   },
   "omnibox": {
-    "keyword": "hilitit rails chrome extension"
+    "keyword": "hilitit hilit.it"
   },
   "content_scripts": [
     {

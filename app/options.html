@@ -10,15 +10,37 @@
     <!-- endbuild -->
   </head>
   <body>
-    <h1>'Allo, 'Allo!</h1>
-
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
     <!-- endbower -->
     <!-- endbuild -->
 
+    <h1>Options</h1>
+
+    <div id="login">
+
+      <div id="login-message"></div>
+
+      <form id="login-form" action="">
+        <label for="username">username</label>
+        <input name="username" id="username" placeholder="username" value="user"/>
+        <br/>
+        <label for="password">password</label>
+        <input name="password" id="password" type="password" placeholder="password" value="password"/>
+        <br/>
+        <input type="submit" id="login-button" value="Login">
+      </form>
+
+    </div>
+
+    <div>
+      <button id="logout-button">logout</button>
+    </div>
+
+
     <!-- build:js scripts/options.js -->
     <script src="scripts/options.js"></script>
     <!-- endbuild -->
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
   </body>
 </html>
