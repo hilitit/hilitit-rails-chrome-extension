@@ -19,7 +19,8 @@ function makeBaseAuth(user, password) {
 
 var logout = function(req, callback){
   isLoggedIn = false;
-}
+  callback();
+};
 
 var login = function(req, callback){
   var username = req.username;
@@ -40,6 +41,8 @@ var login = function(req, callback){
       header: {'Authorization' : makeBaseAuth(username,password)} 
     });
     callback(output);
+  }).fail(function(error){
+    console.error( error );
   });
 };
 
