@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var checkUI = function() {
     console.log('checkUI');
 
-    if (background.isLoggedIn()){
+    if (background.isLoggedIn){
       console.log('user is logged in');
       $('#login').hide();
       $('#logout').show();
@@ -22,11 +22,28 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
   checkUI();
+
+  var login = function(){
+    background.login(
+        { 'type': 'login_plain',
+          'username': $('#username').val(),
+          'password': $('#password').val()  },
+          function(output) {
+            console.log('options.js login-success');
+            console.log(output);
+            if (output.error && output.message ) {
+              $('#login-message').text(output.reason);
+            }
+            checkUI();
+          });
+  };
+
   
   $('#login-form').submit(function(event){
     console.log('login-form');
-    chrome.runtime.sendMessage({username: 'user', password: 'password', type: this.id});
     event.preventDefault();
+    //chrome.runtime.sendMessage({username: 'user', password: 'password', type: this.id});
+    login();
   });
 
 });
