@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var background = chrome.extension.getBackgroundPage();
 
   var checkUI = function() {
-    console.log("checkUI");
+    console.log('checkUI');
 
     if (background.isLoggedIn()){
       console.log('user is logged in');
@@ -19,13 +19,13 @@ document.addEventListener('DOMContentLoaded', function () {
       $('#login').show();
     }
 
-  }
+  };
 
   checkUI();
   
   $('#login-form').submit(function(event){
-    console.log("login-form");
-    chrome.runtime.sendMessage({type: this.id});
+    console.log('login-form');
+    chrome.runtime.sendMessage({username: 'user', password: 'password', type: this.id});
     event.preventDefault();
   });
 

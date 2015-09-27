@@ -10,6 +10,7 @@
   "default_locale": "en",
   "background": {
     "scripts": [
+      "bower_components/jquery/dist/jquery.min.js",
       "scripts/chromereload.js",
       "scripts/background.js"
     ]
@@ -37,7 +38,9 @@
         "http://*/*",
         "https://*/*"
       ],
+      "css": ["styles/main.css"],
       "js": [
+        "bower_components/jquery/dist/jquery.min.js",
         "scripts/contentscript.js"
       ],
       "run_at": "document_end",
