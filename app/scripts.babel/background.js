@@ -30,7 +30,7 @@ var login = function(username, password){
     url: 'http://hilit.it:8000/users/sign_in.json',
     context: document.body
   }).done(function() {
-    console.log("login success");
+    console.log('login success');
     $( this ).addClass( 'done' );
     $.ajaxSetup({
       header: {'Authorization' : makeBaseAuth(username,password)} 

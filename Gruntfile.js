@@ -37,7 +37,7 @@ module.exports = function (grunt) {
       },
       js: {
         files: ['<%= config.srcScript %>/{,*/}*.js'],
-        tasks: ['jshint', 'babel'],
+        tasks: ['babel','jshint'],
         options: {
           livereload: '<%= connect.options.livereload %>'
         }
