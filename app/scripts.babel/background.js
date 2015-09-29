@@ -61,7 +61,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
   chrome.browserAction.setPopup({ 
     tabId: tab.tabId, 
     popup: 'popup.html' 
-  })
+  });
 
 });
 
