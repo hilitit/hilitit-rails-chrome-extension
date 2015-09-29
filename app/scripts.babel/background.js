@@ -77,9 +77,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
   console.log('Turning ' + tab.url + ' red!');
   console.log('background.js browserAction.onClicked');
   //console.error('background.js browserAction.onClicked');
-  chrome.tabs.executeScript({
-    code: 'document.body.style.backgroundColor="red"'
-  });
+  //chrome.tabs.executeScript({ code: 'document.body.style.backgroundColor="red"' });
 
   chrome.browserAction.setPopup({ 
     tabId: tab.tabId, 
@@ -95,10 +93,17 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
   console.log(request);
   console.log('sender');
   console.log(sender);
-  console.log('response');
-  console.log(response);
+  //console.log('response');
+  //console.log(response);
 
   console.log('chrome message: '  +  request + ' '  + sender  + ' ' + response  + ' '  + request.type.startsWith('login') + ' ' + isLoggedIn );
 
+   chrome.tabs.getSelected(null, function(tab) {
+        var tabUrl = tab.url;
+        //window.alert(tab.url);
+        chrome.tabs.executeScript(tab.ib, {
+          file: 'scripts/inject.js'
+        });
+   });
 
 });
