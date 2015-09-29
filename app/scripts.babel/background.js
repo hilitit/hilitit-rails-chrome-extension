@@ -47,6 +47,25 @@ var login = function(req, callback){
 };
 
 
+
+// Called when the user clicks on the browser action.
+chrome.browserAction.onClicked.addListener(function(tab) {
+  // No tabs or host permissions needed!
+  console.log('Turning ' + tab.url + ' red!');
+  console.log('background.js browserAction.onClicked');
+  //console.error('background.js browserAction.onClicked');
+  chrome.tabs.executeScript({
+    code: 'document.body.style.backgroundColor="red"'
+  });
+
+  chrome.browserAction.setPopup({ 
+    tabId: tab.tabId, 
+    popup: 'popup.html' 
+  })
+
+});
+
+
 chrome.runtime.onMessage.addListener(function (request, sender, response) {
 
   console.log('request');
@@ -56,9 +75,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
   console.log('response');
   console.log(response);
 
-  console.log('chrome message: '  +  request + ' '  + sender  + ' ' + response  + ' '  + request.type.startsWith('login') + ' ' + isLoggedIn() );
+  console.log('chrome message: '  +  request + ' '  + sender  + ' ' + response  + ' '  + request.type.startsWith('login') + ' ' + isLoggedIn );
 
-
-  login();
 
 });

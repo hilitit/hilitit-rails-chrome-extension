@@ -7,12 +7,10 @@
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css styles/main.css -->
-    <link href="styles/main.css" rel="stylesheet">
+    <link href="styles/popup.css" rel="stylesheet">
     <!-- endbuild -->
-  </head>
-  <body>
-    <h1>'Allo, 'Allo!</h1>
 
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
     <!-- endbower -->
@@ -21,5 +19,19 @@
     <!-- build:js scripts/popup.js -->
     <script src="scripts/popup.js"></script>
     <!-- endbuild -->
+
+  </head>
+  <body>
+    <div id="mainPopup">
+      <h1>Hilit.it</h1>
+      <form action="">
+        <label id="label-activate" for="activate">Activate</label>
+        <input value="activate" id="activate" type="checkbox"/>
+      </form>
+    </div>
+
+    <div id="loading">loading ...</div>
+
+
   </body>
 </html>

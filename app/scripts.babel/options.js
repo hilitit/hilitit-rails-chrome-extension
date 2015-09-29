@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#login-form').submit(function(event){
     console.log('login-form');
     event.preventDefault();
-    //chrome.runtime.sendMessage({username: 'user', password: 'password', type: this.id});
+    //chrome.runtime.sendMessage({source:'options.js' , username: 'user', password: 'password', type: 'asf'});
     login();
   });
 
