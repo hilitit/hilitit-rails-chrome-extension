@@ -48,6 +48,29 @@ var login = function(req, callback){
 
 
 
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  console.log('onUpdated: ' +  tabId );
+  //console.log( changeInfo );
+  //console.log( changeInfo.url );
+  //console.log( tab );
+  chrome.tabs.get(tabId, function(tab){
+     console.log(tab);
+  });
+});
+
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+  // how to fetch tab url using activeInfo.tabid
+  chrome.tabs.get(activeInfo.tabId, function(tab){
+     console.log(tab.url);
+  });
+});
+
+chrome.tabs.onCreated.addListener(function( tab) {         
+  console.log('onCreated: ' + ' ' + tab.tabId + ' ' + tab.url);
+  console.log( tab );
+});
+
+
 // Called when the user clicks on the browser action.
 chrome.browserAction.onClicked.addListener(function(tab) {
   // No tabs or host permissions needed!
