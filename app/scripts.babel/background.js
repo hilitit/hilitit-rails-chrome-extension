@@ -81,7 +81,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
   chrome.browserAction.setPopup({ 
     tabId: tab.tabId, 
-    popup: 'popup.html' 
+    popup: 'browser_action.html' 
   });
 
 });
@@ -96,14 +96,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
   //console.log('response');
   //console.log(response);
 
-  console.log('chrome message: '  +  request + ' '  + sender  + ' ' + response  + ' '  + request.type.startsWith('login') + ' ' + isLoggedIn );
+  //console.log('chrome message: '  +  request + ' '  + sender  + ' ' + response  + ' '  + request.type.startsWith('login') + ' ' + isLoggedIn );
 
+  if (request.source === 'browser_action.js'){
    chrome.tabs.getSelected(null, function(tab) {
         var tabUrl = tab.url;
         //window.alert(tab.url);
-        chrome.tabs.executeScript(tab.ib, {
-          file: 'scripts/inject.js'
-        });
+        chrome.tabs.executeScript(tab.ib, { file: 'bower_components/jquery/dist/jquery.min.js' });
+        chrome.tabs.executeScript(tab.ib, { file: 'scripts/get-selector.js' });
+        chrome.tabs.executeScript(tab.ib, { file: 'scripts/inject.js' });
    });
+  }
 
 });

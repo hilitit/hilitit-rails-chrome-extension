@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   $('#activate').change(function(dd){
     console.log('Allo!! Popup 2');
-    chrome.runtime.sendMessage({source: 'popup.js',type:'activate'});
+    chrome.runtime.sendMessage({source: 'browser_action.js',type:'activate'});
   });
   $('#loading').hide();
 });
