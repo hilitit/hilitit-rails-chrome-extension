@@ -100,14 +100,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
 
   //console.log('chrome message: '  +  request + ' '  + sender  + ' ' + response  + ' '  + request.type.startsWith('login') + ' ' + isLoggedIn );
 
-  if (request.source === 'inject.js' && request.type === 'log'){
-    console.log('page_action.js log: ' + request.message);
-    response({"asdf": "234234234");
+  if (request.type === 'log'){
+    console.log(request.source + ' ,log: ' + request.message);
+    response({'asdf': '234234234'});
+
   }
 
-  if (request.source === 'page_action.js' && request.type === 'log'){
-    console.log('page_action.js log: ' + request.message);
-  }
 
   if (request.source === 'page_action.js' && request.type === 'query'){
     console.log( 'query' );
@@ -121,6 +119,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
       // Example:
       var url = tab.url;
       // ... do something with url variable
+    console.log( 'url:' );
     console.log( url );
     response({'url': url});
     });
