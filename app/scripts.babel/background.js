@@ -4,8 +4,6 @@ chrome.runtime.onInstalled.addListener(details => {
   console.log('previousVersion', details.previousVersion);
 });
 
-chrome.browserAction.setBadgeText({text: '\'Allo'});
-
 console.log('\'Allo \'Allo! Event Page for Browser Action');
 
 var isLoggedIn = false;
@@ -60,9 +58,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   // how to fetch tab url using activeInfo.tabid
-  chrome.tabs.get(activeInfo.tabId, function(tab){
-     console.log(tab.url);
-  });
+  //chrome.tabs.get(activeInfo.tabId, function(tab){
+  //   console.log(tab.url);
+  //});
 });
 
 chrome.tabs.onCreated.addListener(function( tab) {         
@@ -71,18 +69,22 @@ chrome.tabs.onCreated.addListener(function( tab) {
 });
 
 
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  chrome.pageAction.show(tabId);
+
+  chrome.pageAction.setIcon({'tabId':tabId, 'path':'images/icon-38.png' });
+});
+
+
 // Called when the user clicks on the browser action.
-chrome.browserAction.onClicked.addListener(function(tab) {
+chrome.pageAction.onClicked.addListener(function(tab) {
   // No tabs or host permissions needed!
   console.log('Turning ' + tab.url + ' red!');
-  console.log('background.js browserAction.onClicked');
-  //console.error('background.js browserAction.onClicked');
-  //chrome.tabs.executeScript({ code: 'document.body.style.backgroundColor="red"' });
+  console.log('background.js pageAction.onClicked');
+  chrome.pageAction.setIcon({'tabId':tab.tabId, 'path':'images/icon-19.png' });
 
-  chrome.browserAction.setPopup({ 
-    tabId: tab.tabId, 
-    popup: 'browser_action.html' 
-  });
+  chrome.pageAction.show(tab.id);
 
 });
 
@@ -98,14 +100,43 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
 
   //console.log('chrome message: '  +  request + ' '  + sender  + ' ' + response  + ' '  + request.type.startsWith('login') + ' ' + isLoggedIn );
 
-  if (request.source === 'browser_action.js'){
-   chrome.tabs.getSelected(null, function(tab) {
-        var tabUrl = tab.url;
-        //window.alert(tab.url);
-        chrome.tabs.executeScript(tab.ib, { file: 'bower_components/jquery/dist/jquery.min.js' });
-        chrome.tabs.executeScript(tab.ib, { file: 'scripts/get-selector.js' });
-        chrome.tabs.executeScript(tab.ib, { file: 'scripts/inject.js' });
-   });
+  if (request.source === 'inject.js' && request.type === 'log'){
+    console.log('page_action.js log: ' + request.message);
+    response({"asdf": "234234234");
   }
 
+  if (request.source === 'page_action.js' && request.type === 'log'){
+    console.log('page_action.js log: ' + request.message);
+  }
+
+  if (request.source === 'page_action.js' && request.type === 'query'){
+    console.log( 'query' );
+    chrome.tabs.query({
+      active: true,               // Select active tabs
+      lastFocusedWindow: true     // In the current window
+    }, function(arrayOfTabs) {
+      // Since there can only be one active tab in one active window, 
+      //  the array has only one element
+      var tab = arrayOfTabs[0];
+      // Example:
+      var url = tab.url;
+      // ... do something with url variable
+    console.log( url );
+    response({'url': url});
+    });
+  }
+  if (request.source === 'page_action.js' && request.type === 'activate'){
+    chrome.tabs.getSelected(null, function(tab) {
+      var tabUrl = tab.url;
+      window.alert(tab.id);
+      chrome.tabs.executeScript(tab.id, { file: 'bower_components/jquery/dist/jquery.min.js' });
+      chrome.tabs.executeScript(tab.id, { file: 'scripts/get-selector.js' });
+      chrome.tabs.executeScript(tab.id, { file: 'scripts/inject.js' });
+      chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/icon-19.png' });
+    });
+  }
+  console.log('return true'); 
+  return true; 
 });
+
+

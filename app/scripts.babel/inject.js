@@ -10,7 +10,13 @@
   div.textContent = 'Injected!';
   document.body.appendChild(div);
 
-  chrome.runtime.sendMessage({source: 'inject.js',type:'activate'});
+  chrome.runtime.sendMessage({source: 'inject.js', type:'log', message: 'message .... '}, function(msg){
+    console.log("msg from bacground.js" +  msg );
+  });
+
+  chrome.runtime.sendMessage({source: 'inject.js',type:'activate'}, function(msg){
+    console.log("msg from bacground.js" +  msg );
+  });
   //window.alert('inserted self... giggity');
 
 

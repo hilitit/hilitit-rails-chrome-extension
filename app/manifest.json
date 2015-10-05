@@ -15,11 +15,12 @@
       "scripts/background.js"
     ]
   },
-  "browser_action": {
+  "page_action": {
     "default_icon": {
       "19": "images/icon-19.png",
       "38": "images/icon-38.png"
     },
+    "default_popup": "page_action.html",
     "default_title": "hilitit rails chrome extension"
   },
   "options_page": "options.html",
