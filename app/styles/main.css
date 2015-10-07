@@ -1,3 +1,8 @@
 body {
   padding: 20px;
 }
+
+.hilited {
+ color: red; 
+ background-color: yellow;
+}

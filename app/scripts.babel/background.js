@@ -127,10 +127,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
   if (request.source === 'page_action.js' && request.type === 'activate'){
     chrome.tabs.getSelected(null, function(tab) {
       var tabUrl = tab.url;
-      window.alert(tab.id);
+      //window.alert(tab.id);
+/*
       chrome.tabs.executeScript(tab.id, { file: 'bower_components/jquery/dist/jquery.min.js' });
       chrome.tabs.executeScript(tab.id, { file: 'scripts/get-selector.js' });
       chrome.tabs.executeScript(tab.id, { file: 'scripts/inject.js' });
+*/
       chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/icon-19.png' });
     });
   }

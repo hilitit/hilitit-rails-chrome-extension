@@ -9,7 +9,7 @@
   },
   "default_locale": "en",
   "background": {
-    "persistent": false,
+    "persistent": true,
     "scripts": [
       "bower_components/jquery/dist/jquery.min.js",
       "scripts/chromereload.js",
@@ -42,10 +42,10 @@
       "css": ["styles/main.css"],
       "js": [
         "bower_components/jquery/dist/jquery.min.js",
-        "scripts/contentscript.js"
-      ],
-      "run_at": "document_end",
-      "all_frames": false
+        "scripts/contentscript.js",
+        "scripts/get-selector.js",
+        "scripts/inject.js"
+      ]
     }
   ],
   "permissions": [

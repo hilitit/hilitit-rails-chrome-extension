@@ -63,6 +63,24 @@
     }
 
   });
+ $('body').append('Test');
+ var highlight = function (element, start, end) { 
+   var str = element.html();
+console.log( 'str:' + str );
+   str = str.substr(0, start) +
+     '<span class="hilited">' + 
+     str.substr(start, end - start + 1) +
+     '</span>' +
+     str.substr(end + 1);
+   element.html(str);
+ };
+ var el = $('#second > .texto');
+el.append('HEY ');
+ console.log( el );
+ console.log( el.text()  );
+ console.log( el.html() );
+ highlight(el, 10,20);
+
 
 
 

@@ -34,7 +34,9 @@ $.fn.getSelector = function() {
      selector = el.tagName;
   } else {
      // Default to saying "nth child"
-     selector = ':nth(' + $(this).index() + ')';
+     //selector = ':nth(' + $(this).index() + ')';
+     selector = ':nth-child(' + ($(this).index() + 1) + ')'; 
+
      needParent = true;
   }
 
