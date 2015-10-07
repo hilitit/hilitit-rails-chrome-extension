@@ -9,3 +9,4 @@ package
 app/scripts/*.js
 app/scripts/*.map
 *.swp
+Session.vim
