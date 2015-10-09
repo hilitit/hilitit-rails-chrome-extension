@@ -7,6 +7,7 @@ chrome.runtime.onInstalled.addListener(details => {
 console.log('\'Allo \'Allo! Event Page for Browser Action');
 
 var isLoggedIn = false;
+var currentUser = null;
 
 function makeBaseAuth(user, password) {
   var tok = user + ':' + password;
@@ -20,7 +21,8 @@ var logout = function(req, callback){
   callback();
 };
 
-var login = function(req, callback){
+
+var loadHighlights = function(req, callback){
   var username = req.username;
   var password = req.password;
   console.log('login: ' + username + ' ' + password);
@@ -28,17 +30,43 @@ var login = function(req, callback){
     beforeSend: function (xhr) {
       xhr.setRequestHeader ('Authorization', makeBaseAuth(username , password )); 
     },
-    url: 'http://hilit.it:8000/highlights.json',
+    url: 'http://hilit.it:9000/highlights.json',
     context: document.body
   }).done(function(output) {
     console.log('login success');
     console.log(output);
     isLoggedIn = true;
     $( this ).addClass( 'done' );
+    callback(output);
+  }).fail(function(error){
+    console.error( error );
+  });
+};
+
+
+var login = function(req, callback){
+  var username = req.username;
+  var password = req.password;
+  console.log('login: ' + username + ' ' + password);
+  $.ajax({
+    method: 'POST',
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader ('Authorization', makeBaseAuth(username , password )); 
+      xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
+    },
+    url: 'http://hilit.it:9002/api/sessions',
+    context: document.body
+  }).done(function(output) {
+    console.log('login success');
+    console.log(output);
+    isLoggedIn = true;
+
+    currentUser = output.user;
+    $( this ).addClass( 'done' );
     $.ajaxSetup({
       header: {'Authorization' : makeBaseAuth(username,password)} 
     });
-    callback(output);
+    callback(output.user);
   }).fail(function(error){
     console.error( error );
   });

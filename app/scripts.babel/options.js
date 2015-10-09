@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
       console.log('user is logged in');
       $('#login').hide();
       $('#logout').show();
+      $('#email').text(background.currentUser.email);
     } else {
       console.log('user is logged out');
       $('#logout').hide();
