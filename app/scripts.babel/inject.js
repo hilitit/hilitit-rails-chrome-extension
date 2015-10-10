@@ -81,14 +81,18 @@
   });
  //$('body').append('Test');
  var highlight = function (element, start, end) { 
-   var str = element.html();
-console.log( 'str:' + str );
-   str = str.substr(0, start) +
+console.log( 'highlight ....' );
+   var str1 = element.html();
+   console.log( 'str:' + str1 );
+   var str2 = str1.substr(0, start) +
      ' <span class="hilited"> ' + 
-     str.substr(start, end - start + 1) +
+     ' [ ' + 
+     str1.substr(start, end - start + 1) +
+     '  ] ' +
      ' </span> ' +
-     str.substr(end + 1);
-   element.html(str);
+     str1.substr(end + 1);
+   console.log( str1 );
+   element.html( str2 );
  };
 /*
  var el = $('#second > .texto');
