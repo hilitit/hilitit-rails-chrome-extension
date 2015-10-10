@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
   checkUI();
 
   var login = function(){
-    background.login(
+    background.doLogin(
         { 'type': 'login_plain',
           'username': $('#username').val(),
           'password': $('#password').val()  },

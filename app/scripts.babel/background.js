@@ -1,13 +1,8 @@
 'use strict';
 
-var SERVER="hilit.it:9002";
-
-chrome.runtime.onInstalled.addListener(details => {
-  console.log('previousVersion', details.previousVersion);
-});
-
-console.log('\'Allo \'Allo! Event Page for Browser Action');
-
+var SERVER='hilit.it:9002';
+var HILITIT_USER='hilit_it_user';
+var HILITIT_PASS='hilit_it_pass';
 var isLoggedIn = false;
 var currentUser = null;
 
@@ -17,6 +12,64 @@ function makeBaseAuth(user, pass) {
   var auth = 'Basic ' + hash;
   return auth;
 }
+
+var doLogin = function(req, callback){
+  console.log('login: ' + req.username + ' ' + req.password);
+  $.ajax({
+    method: 'POST',
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader ('Authorization', makeBaseAuth(req.username , req.password )); 
+      xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
+    },
+    url: 'http://' + SERVER + '/api/sessions',
+    //context: document.body
+  }).done(function(output) {
+    console.log('login success');
+    console.log(output);
+    isLoggedIn = true;
+    currentUser = output.user;
+    currentUser.username = req.username;
+    currentUser.password = req.password;
+
+    var obj= {};
+    obj[ HILITIT_USER ] = req.username;
+    obj[ HILITIT_PASS ] = req.password;
+    chrome.storage.local.set( obj , function(){
+      console.log( 'chrome.storage.local.set');
+      callback(output.user);
+    });
+  }).fail(function(error){
+      //console.error( error );
+      callback(error);
+  });
+};
+
+
+chrome.runtime.onInstalled.addListener(details => {
+  console.log('previousVersion', details.previousVersion);
+
+  // No tabs or host permissions needed!
+  chrome.storage.local.get([ HILITIT_USER, HILITIT_PASS ], function(items){
+    console.log('items');
+    console.log(items);
+    console.log('username: ' + items[ HILITIT_USER ]);
+    console.log('password: ' + items[ HILITIT_PASS ]);
+    console.log('isLoggedIn: ' + isLoggedIn);
+    if (! isLoggedIn && items [ HILITIT_USER ] && items[ HILITIT_PASS ] ){
+      console.log('credentials saved, time to login');
+      doLogin( {'username': items[ HILITIT_USER ], 'password' : items[ HILITIT_PASS ] }, function(user){
+        console.log('user login success');
+      });
+    }
+    //  Data's been saved boys and girls, go on home
+  });
+
+
+
+});
+
+console.log('\'Allo \'Allo! Event Page for Browser Action');
+
 
 var logout = function(req, callback){
   isLoggedIn = false;
@@ -44,7 +97,7 @@ var queryActiveTab = function(callback){
 
 var loadHighlights = function(url, callback){
   console.log('loadHighlights for url:  ' + url );
-  console.log( currentUser.username + ":" + currentUser.password );
+  console.log( currentUser.username + ':' + currentUser.password );
   $.ajax({
     url: 'http://' +  SERVER + '/highlights.json',
     beforeSend: function (xhr) {
@@ -53,9 +106,9 @@ var loadHighlights = function(url, callback){
     },
     //context: document.body
   }).done(function(output) {
-    console.log('login success');
+    //console.log('login success');
     console.log(output);
-    isLoggedIn = true;
+    //isLoggedIn = true;
     //$( this ).addClass( 'done' );
     callback(output);
   }).fail(function(error){
@@ -74,31 +127,6 @@ var doHighlight = function(tab, object, callback) {
 };
 
 
-var login = function(req, callback){
-  console.log('login: ' + req.username + ' ' + req.password);
-  $.ajax({
-    method: 'POST',
-    beforeSend: function (xhr) {
-      xhr.setRequestHeader ('Authorization', makeBaseAuth(req.username , req.password )); 
-      xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
-    },
-    url: 'http://' + SERVER + '/api/sessions',
-    //context: document.body
-  }).done(function(output) {
-    console.log('login success');
-    console.log(output);
-    isLoggedIn = true;
-    currentUser = output.user;
-    currentUser.username = req.username;
-    currentUser.password = req.password;
-    //$( this ).addClass( 'done' );
-    callback(output.user);
-  }).fail(function(error){
-    //console.error( error );
-    callback(error);
-  });
-};
-
 
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
@@ -116,6 +144,9 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
   //chrome.tabs.get(activeInfo.tabId, function(tab){
   //   console.log(tab.url);
   //});
+
+
+
 });
 
 chrome.tabs.onCreated.addListener(function( tab) {         
@@ -132,9 +163,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 });
 
 
-// Called when the user clicks on the browser action.
 chrome.pageAction.onClicked.addListener(function(tab) {
-  // No tabs or host permissions needed!
   console.log('Turning ' + tab.url + ' red!');
   console.log('background.js pageAction.onClicked');
   chrome.pageAction.setIcon({'tabId':tab.tabId, 'path':'images/icon-19.png' });
