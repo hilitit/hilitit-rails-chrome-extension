@@ -1,5 +1,7 @@
 'use strict';
 
+var SERVER="hilit.it:9002";
+
 chrome.runtime.onInstalled.addListener(details => {
   console.log('previousVersion', details.previousVersion);
 });
@@ -9,8 +11,8 @@ console.log('\'Allo \'Allo! Event Page for Browser Action');
 var isLoggedIn = false;
 var currentUser = null;
 
-function makeBaseAuth(user, password) {
-  var tok = user + ':' + password;
+function makeBaseAuth(user, pass) {
+  var tok = user + ':' + pass;
   var hash = btoa(tok);
   var auth = 'Basic ' + hash;
   return auth;
@@ -22,53 +24,78 @@ var logout = function(req, callback){
 };
 
 
-var loadHighlights = function(req, callback){
-  var username = req.username;
-  var password = req.password;
-  console.log('login: ' + username + ' ' + password);
+var queryActiveTab = function(callback){
+  console.log( 'queryActiveTab' );
+  chrome.tabs.query({
+    active: true,               // Select active tabs
+    lastFocusedWindow: true     // In the current window
+  }, function(arrayOfTabs) {
+    var tab = arrayOfTabs[0];
+    var url = tab.url;
+    console.log( 'url:' );
+    console.log( url );
+    callback( tab );
+  });
+};
+
+
+
+
+
+var loadHighlights = function(url, callback){
+  console.log('loadHighlights for url:  ' + url );
+  console.log( currentUser.username + ":" + currentUser.password );
   $.ajax({
+    url: 'http://' +  SERVER + '/highlights.json',
     beforeSend: function (xhr) {
-      xhr.setRequestHeader ('Authorization', makeBaseAuth(username , password )); 
+      xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password )); 
+      xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
     },
-    url: 'http://hilit.it:9000/highlights.json',
-    context: document.body
+    //context: document.body
   }).done(function(output) {
     console.log('login success');
     console.log(output);
     isLoggedIn = true;
-    $( this ).addClass( 'done' );
+    //$( this ).addClass( 'done' );
     callback(output);
   }).fail(function(error){
     console.error( error );
+   callback(error);
+  });
+};
+
+var doHighlight = function(tab, object, callback) {
+  chrome.tabs.sendMessage(tab.id, object, function(response) {
+    console.log('response + + + + + +');
+    console.log(response);
+    console.log(callback);
+    callback(null);
   });
 };
 
 
 var login = function(req, callback){
-  var username = req.username;
-  var password = req.password;
-  console.log('login: ' + username + ' ' + password);
+  console.log('login: ' + req.username + ' ' + req.password);
   $.ajax({
     method: 'POST',
     beforeSend: function (xhr) {
-      xhr.setRequestHeader ('Authorization', makeBaseAuth(username , password )); 
+      xhr.setRequestHeader ('Authorization', makeBaseAuth(req.username , req.password )); 
       xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
     },
-    url: 'http://hilit.it:9002/api/sessions',
-    context: document.body
+    url: 'http://' + SERVER + '/api/sessions',
+    //context: document.body
   }).done(function(output) {
     console.log('login success');
     console.log(output);
     isLoggedIn = true;
-
     currentUser = output.user;
-    $( this ).addClass( 'done' );
-    $.ajaxSetup({
-      header: {'Authorization' : makeBaseAuth(username,password)} 
-    });
+    currentUser.username = req.username;
+    currentUser.password = req.password;
+    //$( this ).addClass( 'done' );
     callback(output.user);
   }).fail(function(error){
-    console.error( error );
+    //console.error( error );
+    callback(error);
   });
 };
 
@@ -135,23 +162,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
   }
 
 
-  if (request.source === 'page_action.js' && request.type === 'query'){
-    console.log( 'query' );
-    chrome.tabs.query({
-      active: true,               // Select active tabs
-      lastFocusedWindow: true     // In the current window
-    }, function(arrayOfTabs) {
-      // Since there can only be one active tab in one active window, 
-      //  the array has only one element
-      var tab = arrayOfTabs[0];
-      // Example:
-      var url = tab.url;
-      // ... do something with url variable
-    console.log( 'url:' );
-    console.log( url );
-    response({'url': url});
-    });
-  }
   if (request.source === 'page_action.js' && request.type === 'activate'){
     chrome.tabs.getSelected(null, function(tab) {
       var tabUrl = tab.url;

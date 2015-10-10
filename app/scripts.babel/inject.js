@@ -10,6 +10,22 @@
   div.textContent = 'Injected!';
   document.body.appendChild(div);
 
+
+  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log( '  inject.js ' );
+    console.log( request );
+    console.log( sender );
+   //if (request.source === 'page_action.js'){
+     var el = $('#second > .texto');
+     el.append('HEY ');
+     //console.log( el );
+     //console.log( el.text()  );
+     //console.log( el.html() );
+     highlight(el, 10,20);
+     sendResponse( null );
+   //}
+  });
+
   chrome.runtime.sendMessage({source: 'inject.js', type:'log', message: 'message .... '}, function(msg){
     console.log('msg from bacground.js' +  msg );
   });
@@ -63,25 +79,25 @@
     }
 
   });
- $('body').append('Test');
+ //$('body').append('Test');
  var highlight = function (element, start, end) { 
    var str = element.html();
 console.log( 'str:' + str );
    str = str.substr(0, start) +
-     '<span class="hilited">' + 
+     ' <span class="hilited"> ' + 
      str.substr(start, end - start + 1) +
-     '</span>' +
+     ' </span> ' +
      str.substr(end + 1);
    element.html(str);
  };
+/*
  var el = $('#second > .texto');
-el.append('HEY ');
+ el.append('HEY ');
  console.log( el );
  console.log( el.text()  );
  console.log( el.html() );
  highlight(el, 10,20);
-
-
+*/
 
 
 
