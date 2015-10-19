@@ -11,6 +11,11 @@ document.addEventListener('DOMContentLoaded', function () {
   var backGround = chrome.extension.getBackgroundPage();
   backGround.queryActiveTab(function(tab){
     console.log( 'query response' );
+
+    if (! backGround.isLoggedIn ){
+      return; // or use guest user
+    }
+
     backGround.loadHighlights(tab.url,function(data){
       $.each(data, function(key, object){
         console.log(key);
@@ -26,6 +31,21 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   });
+
+
+  if ( backGround.isLoggedIn ){
+    $('#not-logged-in').hide();
+  }
+  $('#go-to-options').click(function() {
+    if (chrome.runtime.openOptionsPage) {
+      // New way to open options pages, if supported (Chrome 42+).
+      chrome.runtime.openOptionsPage();
+    } else {
+      // Reasonable fallback.
+      window.open(chrome.runtime.getURL('options.html'));
+    }
+  });
+
 
   $('#activate').change(function(dd){
     console.log('Allo!! ');

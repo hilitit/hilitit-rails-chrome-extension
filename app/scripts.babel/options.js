@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var background = chrome.extension.getBackgroundPage();
 
   var checkUI = function() {
-    console.log('checkUI');
+    console.log('options.js checkUI');
 
     if (background.isLoggedIn){
       console.log('user is logged in');
@@ -39,12 +39,24 @@ document.addEventListener('DOMContentLoaded', function () {
           });
   };
 
+  var logout = function(){
+    console.log('options.js logout ');
+    background.doLogout(function(){
+      console.log('options.js logout callback');
+      checkUI();
+    });
+  };
+
   
   $('#login-form').submit(function(event){
-    console.log('login-form');
+    console.log('login-form login');
     event.preventDefault();
-    //chrome.runtime.sendMessage({source:'options.js' , username: 'user', password: 'password', type: 'asf'});
     login();
+  });
+  $('#logout-form').submit(function(event){
+    console.log('login-form logout');
+    event.preventDefault();
+    logout();
   });
 
 });

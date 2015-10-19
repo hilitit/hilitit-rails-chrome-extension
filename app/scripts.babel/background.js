@@ -71,9 +71,13 @@ chrome.runtime.onInstalled.addListener(details => {
 console.log('\'Allo \'Allo! Event Page for Browser Action');
 
 
-var logout = function(req, callback){
-  isLoggedIn = false;
-  callback();
+var doLogout = function(callback){
+  console.log('background.js doLogout');
+  chrome.storage.local.remove( [ HILITIT_USER, HILITIT_PASS ] , function(){
+    console.log( 'chrome.storage.local.remove: [ HILITIT_USER, HILITIT_PASS ]');
+    isLoggedIn = false;
+    callback();
+  });
 };
 
 
