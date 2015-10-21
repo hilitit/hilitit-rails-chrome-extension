@@ -110,10 +110,8 @@ var loadHighlights = function(url, callback){
     },
     //context: document.body
   }).done(function(output) {
-    //console.log('login success');
+    console.log('highlights success');
     console.log(output);
-    //isLoggedIn = true;
-    //$( this ).addClass( 'done' );
     callback(output);
   }).fail(function(error){
     console.error( error );
@@ -194,6 +192,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
 
   }
 
+  if (request.source === 'inject.js' && request.type === 'hilit'){
+    console.log(request.source + ' ,hilit: ' + request.type);
+    console.log();
+///
+  }
 
   if (request.source === 'page_action.js' && request.type === 'activate'){
     chrome.tabs.getSelected(null, function(tab) {

@@ -12,19 +12,29 @@
   document.body.appendChild(div);
 */
 
+  var hilitCurrentSelection = function()
+  {
+    console.log('hilit currentSelection ...');
+    console.log(currentSelection);
+    chrome.runtime.sendMessage({source: 'inject.js',  type: 'hilit' ,obj: currentSelection}, function(response) {
+      console.log('hilit.js response');
+      console.log(response);
+      console.log('time to reload current page hilits from server');
+    });
+  };
 
   var injectPopup = function()
   {
     console.log('contentscript.js init');
 
     var popup = $.parseHTML( '<div style="display:none;width:100px;height:50px;border:3px solid black; background-color: gray;" id="popup"><div style="padding: 5px; width: 90px; height: 40px; background-color: white;" id="hilit-button"  value="hilit">Hilit</div></div>' );
-    $( "body" ).append(  popup );
-    $("#hilit-button").click(function(event) {
-      console.log("hilit-button clicked !!!");
-      $("#hilit-button").text("Hiliting ...");
+    $( 'body' ).append(  popup );
+    $('#hilit-button').click(function(event) {
+      console.log('hilit-button clicked !!!');
+      $('#hilit-button').text('Hiliting ...');
       hilitCurrentSelection();
     });
-  }
+  };
 
   injectPopup();
 
@@ -109,8 +119,8 @@
      str1.substr(start, end - start + 1) +
      //'  ] ' +
      s2 +
-     str1.substr(end + s1.length + s2.length + 1);
-   console.log( str1 );
+     str1.substr(end + 1);
+   //console.log( str1 );
    element.html( str2 );
  };
 /*
