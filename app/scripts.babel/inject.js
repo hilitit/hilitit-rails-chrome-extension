@@ -2,6 +2,7 @@
 
 (function() {
 
+/*
   // just place a div at top right
   var div = document.createElement('div');
   div.style.position = 'fixed';
@@ -9,19 +10,35 @@
   div.style.right = 0;
   div.textContent = 'Injected!';
   document.body.appendChild(div);
+*/
 
+
+  var injectPopup = function()
+  {
+    console.log('contentscript.js init');
+
+    var popup = $.parseHTML( '<div style="display:none;width:100px;height:50px;border:3px solid black; background-color: gray;" id="popup"><div style="padding: 5px; width: 90px; height: 40px; background-color: white;" id="hilit-button"  value="hilit">Hilit</div></div>' );
+    $( "body" ).append(  popup );
+    $("#hilit-button").click(function(event) {
+      console.log("hilit-button clicked !!!");
+      $("#hilit-button").text("Hiliting ...");
+      hilitCurrentSelection();
+    });
+  }
+
+  injectPopup();
 
   chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     console.log( '  inject.js ' );
     console.log( request );
-    console.log( sender );
+    //console.log( sender );
    //if (request.source === 'page_action.js'){
      var el = $('#second > .texto');
      el.append('HEY ');
-     //console.log( el );
+     console.log( el );
      //console.log( el.text()  );
      //console.log( el.html() );
-     highlight(el, 10,20);
+     //highlight(el, 10,20);
      sendResponse( null );
    //}
   });
@@ -81,16 +98,18 @@
   });
  //$('body').append('Test');
  var highlight = function (element, start, end) { 
-console.log( 'highlight ....' );
+   console.log( 'highlight ....' + 'start: '  + start +  ' end: ' + end);
    var str1 = element.html();
    console.log( 'str:' + str1 );
+   var s1 = '<span class="hilited">';
+   var s2 = '</span>';
    var str2 = str1.substr(0, start) +
-     ' <span class="hilited"> ' + 
-     ' [ ' + 
+     s1 +
+     //' [ ' + 
      str1.substr(start, end - start + 1) +
-     '  ] ' +
-     ' </span> ' +
-     str1.substr(end + 1);
+     //'  ] ' +
+     s2 +
+     str1.substr(end + s1.length + s2.length + 1);
    console.log( str1 );
    element.html( str2 );
  };
