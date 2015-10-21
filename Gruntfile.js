@@ -24,7 +24,19 @@ module.exports = function (grunt) {
     srcScript: '<%= config.app %>/scripts.babel'
   };
 
+
   grunt.initConfig({
+
+		notify_hooks: {
+			options: {
+				enabled: true,
+				max_jshint_notifications: 5, // maximum number of notifications from jshint output // jshint ignore:line
+				title: 'Hilitit Chrome Extension', // defaults to the name in package.json, or will use project directory's name 
+				success: false, // whether successful grunt executions should be notified automatically 
+				duration: 3 // the duration of notification in seconds, for `notify-send only 
+			}
+		},
+
 
     // Project settings
     config: config,
@@ -348,4 +360,9 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
+
+	grunt.loadNpmTasks('grunt-notify');
+	grunt.task.run('notify_hooks');
+
+
 };
