@@ -103,7 +103,7 @@ var loadHighlights = function(url, callback){
   console.log('loadHighlights for url:  ' + url );
   console.log( currentUser.username + ':' + currentUser.password );
   $.ajax({
-    url: 'http://' +  SERVER + '/highlights.json',
+    url: 'http://' +  SERVER + '/api/highlights.json',
     beforeSend: function (xhr) {
       xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password )); 
       xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
@@ -129,6 +129,30 @@ var doHighlight = function(tab, object, callback) {
 };
 
 
+var createHighlight = function(obj, callback){
+  console.log( 'background.js ' + ' createHighlight' );
+  $.ajax({
+    method: 'POST',
+    data: { highlight : JSON.stringify(obj) },
+    //contentType: 'application/json; charset=utf-8',
+    dataType: 'json',
+    url: 'http://' + SERVER + '/api/highlights.json',
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password )); 
+      xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
+    },
+    //context: document.body
+  }).done(function(output) {
+    console.log('createHighlights success');
+    console.log(output);
+    callback(output);
+  }).fail(function(error){
+    console.log('createHighlights failed');
+    console.error( error );
+   callback(error);
+  });
+
+};
 
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
@@ -192,7 +216,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
 
   }
 
-  if (request.source === 'inject.js' && request.type === 'hilit'){
+  if (request.source === 'inject.js' && request.type === 'create'){
+    createHighlight( request.object, function(output){
+      console.log( 'background.js createHighlight' );
+      response( output );
+    });
     console.log(request.source + ' ,hilit: ' + request.type);
     console.log();
 ///

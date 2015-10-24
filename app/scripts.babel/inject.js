@@ -16,7 +16,8 @@
   {
     console.log('hilit currentSelection ...');
     console.log(currentSelection);
-    chrome.runtime.sendMessage({source: 'inject.js',  type: 'hilit' ,obj: currentSelection}, function(response) {
+
+    chrome.runtime.sendMessage({source: 'inject.js',  type: 'create' ,object: currentSelection}, function(response) {
       console.log('hilit.js response');
       console.log(response);
       console.log('time to reload current page hilits from server');
@@ -85,12 +86,20 @@
       var selRange = selection.getRangeAt(0);
       console.log(selection);
 
+      var parser = document.createElement('a');
+      parser.href = window.location.href;
       currentSelection = {
-        selector: selector,
+        'selector': selector,
         'text': selection.toString() ,
         'href': window.location.href,
-        'startOffset': selRange.startOffset,
-        'endOffset': selRange.endOffset
+        'start_offset': selRange.startOffset,
+        'end_offset': selRange.endOffset,
+        'protocol': parser.protocol, // => "http:"
+        'hostname': parser.hostname, // => "example.com"
+        'port' : parser.port,     // => "3000"
+        'pathname' : parser.pathname, // => "/pathname/"
+        'search' : parser.search,   // => "?search=test"
+        'hash' : parser.hash     // => "#hash"
       };
 
       $('#popup').css('left',event.pageX);      // <<< use pageX and pageY
