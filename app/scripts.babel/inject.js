@@ -43,15 +43,18 @@
     console.log( '  inject.js ' );
     console.log( request );
     //console.log( sender );
-   //if (request.source === 'page_action.js'){
-     var el = $('#second > .texto');
-     el.append('HEY ');
+   if (request.source === 'background.js' && request.type === 'highlight'){
+     var h = request.object;
+     //var el = $('#second > .texto');
+     var el = $( h.selector );
+     //el.append('HEY ');
      console.log( el );
      //console.log( el.text()  );
      //console.log( el.html() );
      //highlight(el, 10,20);
+     highlight(el, h.start_offset, h.end_offset);
      sendResponse( null );
-   //}
+   }
   });
 
   chrome.runtime.sendMessage({source: 'inject.js', type:'log', message: 'message .... '}, function(msg){

@@ -101,7 +101,7 @@ var queryActiveTab = function(callback){
 
 var loadHighlights = function(url, callback){
   console.log('loadHighlights for url:  ' + url );
-  console.log( currentUser.username + ':' + currentUser.password );
+  //console.log( currentUser.username + ':' + currentUser.password );
   $.ajax({
     url: 'http://' +  SERVER + '/api/highlights.json',
     beforeSend: function (xhr) {
@@ -110,17 +110,18 @@ var loadHighlights = function(url, callback){
     },
     //context: document.body
   }).done(function(output) {
-    console.log('highlights success');
-    console.log(output);
+    console.log('loadHighlights success ' + output.length);
+    //console.log(output);
     callback(output);
   }).fail(function(error){
+    console.log('loadHighlights error');
     console.error( error );
    callback(error);
   });
 };
 
 var doHighlight = function(tab, object, callback) {
-  chrome.tabs.sendMessage(tab.id, object, function(response) {
+  chrome.tabs.sendMessage(tab.id,{source: 'background.js', type: 'highlight', object: object}, function(response) {
     console.log('response + + + + + +');
     console.log(response);
     console.log(callback);
