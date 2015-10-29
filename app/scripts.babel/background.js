@@ -39,8 +39,9 @@ var doLogin = function(req, callback){
       callback(output.user);
     });
   }).fail(function(error){
-      //console.error( error );
-      callback(error);
+    console.error( 'doLogin error' );
+    console.error( error );
+    callback(error);
   });
 };
 
@@ -98,12 +99,35 @@ var queryActiveTab = function(callback){
 
 
 
+var loadHighlight = function(highlightId, callback){
+
+  console.log('loadHighlight for id:  ' + highlightId );
+  $.ajax({
+    url: 'http://' +  SERVER + '/api/highlights/' + highlightId + '.json',
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password )); 
+      xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
+    },
+    //context: document.body
+  }).done(function(output) {
+    console.log('loadHighlight success ');
+    console.log(output);
+    callback(output);
+  }).fail(function(error){
+    console.error('loadHighlight error');
+    console.error( error );
+   callback(error);
+  });
+};
+
 
 var loadHighlights = function(url, callback){
   console.log('loadHighlights for url:  ' + url );
+  var parser = document.createElement('a');
+  parser.href = url;
   //console.log( currentUser.username + ':' + currentUser.password );
   $.ajax({
-    url: 'http://' +  SERVER + '/api/highlights.json',
+    url: 'http://' +  SERVER + '/api/highlights.json?' + '&protocol=' + parser.protocol + '&hostname=' + parser.hostname + '&pathname=' + parser.pathname + '&search=' + parser.search  + '&pathname_hash' + parser.hash ,
     beforeSend: function (xhr) {
       xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password )); 
       xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
@@ -114,7 +138,7 @@ var loadHighlights = function(url, callback){
     //console.log(output);
     callback(output);
   }).fail(function(error){
-    console.log('loadHighlights error');
+    console.eror('loadHighlights error');
     console.error( error );
    callback(error);
   });
@@ -157,21 +181,29 @@ var createHighlight = function(obj, callback){
 
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  console.log('onUpdated: ' +  tabId );
-  //console.log( changeInfo );
-  //console.log( changeInfo.url );
-  //console.log( tab );
+  console.log('background.js tabs.onUpdated');
+  console.log( changeInfo );
   chrome.tabs.get(tabId, function(tab){
      console.log(tab);
+     loadHighlights(tab.url, function(data){
+       console.log('background.js tabs.onUpdated loadHighlights.length: ' +  data.length );
+       if ( data.length > 0 ){
+         chrome.pageAction.setIcon({'tabId':tabId, 'path':'images/icon-38.png' });
+       }
+     });
   });
+
+  chrome.pageAction.show(tabId);
+
 });
+
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   // how to fetch tab url using activeInfo.tabid
-  //chrome.tabs.get(activeInfo.tabId, function(tab){
-  //   console.log(tab.url);
-  //});
-
+  console.log( 'background.js onActivated' );
+  chrome.tabs.get(activeInfo.tabId, function(tab){
+     console.log(tab.url);
+  });
 
 
 });
@@ -182,12 +214,6 @@ chrome.tabs.onCreated.addListener(function( tab) {
 });
 
 
-
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  chrome.pageAction.show(tabId);
-
-  chrome.pageAction.setIcon({'tabId':tabId, 'path':'images/icon-38.png' });
-});
 
 
 chrome.pageAction.onClicked.addListener(function(tab) {

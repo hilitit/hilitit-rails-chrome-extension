@@ -42,17 +42,22 @@
   chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     console.log( '  inject.js ' );
     console.log( request );
-    //console.log( sender );
    if (request.source === 'background.js' && request.type === 'highlight'){
      var h = request.object;
      //var el = $('#second > .texto');
-     var el = $( h.selector );
+     //var el = $( h.selector );
+     var el = $(  h.tag_name + ':contains(' + h.text + ')' );
      //el.append('HEY ');
-     console.log( el );
      //console.log( el.text()  );
      //console.log( el.html() );
      //highlight(el, 10,20);
-     highlight(el, h.start_offset, h.end_offset);
+     if (el){
+       console.log( 'found element: ' + h.selector + ' ' + el  );
+       console.log( el );
+       doHighlight(el, h.start_offset, h.end_offset - 1);
+     } else {
+       console.error('selector: ' + h.selector + ' failed ');
+     }
      sendResponse( null );
    }
   });
@@ -87,7 +92,7 @@
       var selector = $(this).getSelector();
       console.log(selector + ' --> matches ' + $(selector).length + ' element');
       var selRange = selection.getRangeAt(0);
-      console.log(selection);
+      //console.log(selection);
 
       var parser = document.createElement('a');
       parser.href = window.location.href;
@@ -102,7 +107,8 @@
         'port' : parser.port,     // => "3000"
         'pathname' : parser.pathname, // => "/pathname/"
         'search' : parser.search,   // => "?search=test"
-        'hash' : parser.hash     // => "#hash"
+        'hash' : parser.hash,     // => "#hash"
+        'tag_name' : $(this).prop('tagName') 
       };
 
       $('#popup').css('left',event.pageX);      // <<< use pageX and pageY
@@ -119,7 +125,7 @@
 
   });
  //$('body').append('Test');
- var highlight = function (element, start, end) { 
+ var doHighlight = function (element, start, end) { 
    console.log( 'highlight ....' + 'start: '  + start +  ' end: ' + end);
    var str1 = element.html();
    console.log( 'str:' + str1 );

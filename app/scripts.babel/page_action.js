@@ -18,8 +18,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     backGround.loadHighlights(tab.url,function(data){
       $.each(data, function(key, object){
-        console.log(key);
-        console.log(object);
+        //console.log(key);
+        //console.log(object);
+
+        var h = $.parseHTML( '<li class="highlight" id="hi-' +  object.id  + '">' + object.id + ' ' +  object.user_id  + '</li>' );
+        $( '#highlights-list' ).append(  h );
+        $( '#hi-' + object.id).click(function() {
+          console.log( 'Handler for .click() called.' );
+          backGround.loadHighlight( object.id ,function(object2){
+            backGround.doHighlight( tab, object2 ,function(response) {
+              console.log('response - - - - - - - ');
+              console.log(response);
+              chrome.runtime.sendMessage({source: 'page_action.js', type:'log', message: 'response - - - - '});
+
+            });
+          });
+        });
+        /*
         backGround.doHighlight( tab, object ,function(response) {
           console.log('response - - - - - - - ');
           console.log(response);
@@ -27,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         });
+*/
 
       });
     });
