@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
       console.log('user is logged out');
       $('#logout').hide();
       $('#login').show();
+      $('#email').text('');
     }
 
   };
@@ -32,10 +33,11 @@ document.addEventListener('DOMContentLoaded', function () {
           'username': $('#username').val(),
           'password': $('#password').val()  },
           function(output) {
-            console.log('options.js login-success');
+            console.log('options.js login calback');
             console.log(output);
-            if (output.error && output.message ) {
-              $('#login-message').text(output.reason);
+            if (output.error && output.responseText ) {
+              console.error('options.js login failure');
+              $('#login-message').text(output.responseJSON.error);
             }
             checkUI();
           });
