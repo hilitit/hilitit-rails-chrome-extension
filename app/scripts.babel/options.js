@@ -1,6 +1,8 @@
 'use strict';
 
 
+var REGISTER_URL = 'http://127.0.0.1:9002/users/sign_up';
+
 document.addEventListener('DOMContentLoaded', function () {
   console.log('\'Allo \'Allo! Option');
 
@@ -57,6 +59,11 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('login-form logout');
     event.preventDefault();
     logout();
+  });
+  $('#register-form').submit(function(event){
+    console.log('register-form logout');
+    event.preventDefault();
+    window.open(REGISTER_URL );
   });
 
 });

@@ -6,7 +6,7 @@
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css styles/main.css -->
-    <link href="styles/main.css" rel="stylesheet">
+    <link href="styles/options.css" rel="stylesheet">
     <!-- endbuild -->
   </head>
   <body>
@@ -15,7 +15,9 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-    <h1>Options</h1>
+    <div id="all">
+
+    <h3>Please Login</h3>
 
     <div id="login">
 
@@ -31,6 +33,10 @@
         <input type="submit" id="login-button" value="Login">
       </form>
 
+      <form id="register-form" action="">
+        <div id="email"></div>
+        <input type="submit" id="register-button" value="Create new account">
+      </form>
     </div>
 
     <div id="logout">
@@ -44,6 +50,7 @@
     <!-- build:js scripts/options.js -->
     <script src="scripts/options.js"></script>
     <!-- endbuild -->
+    </div>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
   </body>
 </html>

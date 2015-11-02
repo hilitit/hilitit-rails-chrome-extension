@@ -1,0 +1,24 @@
+
+#login label{
+  width: 70px;
+}
+
+#all {
+  width: 50%;
+  margin: 0 auto;
+}
+#login #username{
+  width: 195px;
+}
+
+#login #password{
+  width: 195px;
+}
+
+#login-button{
+  width: 250px;
+}
+
+#register-button{
+  width: 250px;
+}
