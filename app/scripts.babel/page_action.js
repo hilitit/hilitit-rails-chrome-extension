@@ -10,15 +10,17 @@ document.addEventListener('DOMContentLoaded', function () {
   backGround.queryActiveTab(function(tab){
     console.log( 'query response' );
 
-    if (! backGround.isLoggedIn ){
-      return; // or use guest user
-    }
 
     backGround.loadHighlights(tab.url,function(data){
 
       if ( data.length === 0 ){
-        $('#message').text('No previous hilits, would you like to be the first?');
-        $('#form-activate').show();
+        if ( backGround.isLoggedIn ){
+          $('#message').text('No previous hilits, would you like to be the first?');
+          $('#form-activate').show();
+        } else {
+          console.log('page_action, we have a guest and no previous highlights !');
+          $('#message').text('No previous hilits, to create hilits please login first.');
+        }
       } else {
         $('#message').text('');
         $('#form-activate').hide();
