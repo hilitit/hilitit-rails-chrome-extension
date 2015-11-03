@@ -6,8 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
   //Get Reference to Functions
 
 
-
-
   var backGround = chrome.extension.getBackgroundPage();
   backGround.queryActiveTab(function(tab){
     console.log( 'query response' );
@@ -17,6 +15,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     backGround.loadHighlights(tab.url,function(data){
+
+      if ( data.length === 0 ){
+        $('#message').text('No previous hilits, would you like to be the first?');
+        $('#form-activate').show();
+      } else {
+        $('#message').text('');
+        $('#form-activate').hide();
+      }
+
       $.each(data, function(key, object){
         //console.log(key);
         //console.log(object);

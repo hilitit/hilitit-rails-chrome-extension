@@ -1,5 +1,23 @@
 // this is the code which will be injected into a given page...
 
+
+var getCurrentURL = function(){
+
+  var parser = document.createElement('a');
+  parser.href = window.location.href;
+  var currentURL = {
+    'href': window.location.href,
+    'protocol': parser.protocol, // => "http:"
+    'hostname': parser.hostname, // => "example.com"
+    'port' : parser.port,     // => "3000"
+    'pathname' : parser.pathname, // => "/pathname/"
+    'search' : parser.search,   // => "?search=test"
+    'hash' : parser.hash      // => "#hash"
+  };
+  return currentURL;
+
+};
+
 (function() {
 
 /*
@@ -74,56 +92,69 @@
 
   var currentSelection = null;
 
-  $('*').mouseup(function(event) {
+  var activateSelectDetection = function(){
+    $('*').mouseup(function(event) {
 
-    var selection;
+      var selection;
 
-    if (window.getSelection) {
-      selection = window.getSelection();
-    } else if (document.selection) {
-      selection = document.selection.createRange();
+      if (window.getSelection) {
+        selection = window.getSelection();
+      } else if (document.selection) {
+        selection = document.selection.createRange();
+      }
+
+      if (selection.toString() !== ''){
+        event.stopPropagation();
+
+        // console.log(''' + selection.toString() + '' was selected at ' + event.pageX + '/' + event.pageY);
+        //var selector = $(this).getPath();
+        var selector = $(this).getSelector();
+        console.log(selector + ' --> matches ' + $(selector).length + ' element');
+        var selRange = selection.getRangeAt(0);
+        //console.log(selection);
+
+        var parser = document.createElement('a');
+        parser.href = window.location.href;
+        currentSelection = {
+          'selector': selector,
+          'text': selection.toString() ,
+          'href': window.location.href,
+          'start_offset': selRange.startOffset,
+          'end_offset': selRange.endOffset,
+          'protocol': parser.protocol, // => "http:"
+          'hostname': parser.hostname, // => "example.com"
+          'port' : parser.port,     // => "3000"
+          'pathname' : parser.pathname, // => "/pathname/"
+          'search' : parser.search,   // => "?search=test"
+          'hash' : parser.hash,     // => "#hash"
+          'tag_name' : $(this).prop('tagName') 
+        };
+
+        $('#popup').css('left',event.pageX);      // <<< use pageX and pageY
+        $('#popup').css('top',event.pageY);
+        $('#popup').css('display','inline');
+        $('#popup').css('position', 'absolute');  // <<< also make it absolute!
+
+        setTimeout(function(){
+          $('#popup').css('display','none');
+          $('#hilit-button').text('Hilit');
+        }, 2000);
+
+      }
+
+    });
+
+  };
+
+  chrome.runtime.sendMessage({source: 'inject.js',  type: 'is_url_hiliteable' ,object: getCurrentURL() }, function(response) {
+    console.log('inject.js is_url_hiliteable: ' + response.result );
+    if (response.result){
+      activateSelectDetection();
     }
-
-    if (selection.toString() !== ''){
-      event.stopPropagation();
-
-      // console.log(''' + selection.toString() + '' was selected at ' + event.pageX + '/' + event.pageY);
-      //var selector = $(this).getPath();
-      var selector = $(this).getSelector();
-      console.log(selector + ' --> matches ' + $(selector).length + ' element');
-      var selRange = selection.getRangeAt(0);
-      //console.log(selection);
-
-      var parser = document.createElement('a');
-      parser.href = window.location.href;
-      currentSelection = {
-        'selector': selector,
-        'text': selection.toString() ,
-        'href': window.location.href,
-        'start_offset': selRange.startOffset,
-        'end_offset': selRange.endOffset,
-        'protocol': parser.protocol, // => "http:"
-        'hostname': parser.hostname, // => "example.com"
-        'port' : parser.port,     // => "3000"
-        'pathname' : parser.pathname, // => "/pathname/"
-        'search' : parser.search,   // => "?search=test"
-        'hash' : parser.hash,     // => "#hash"
-        'tag_name' : $(this).prop('tagName') 
-      };
-
-      $('#popup').css('left',event.pageX);      // <<< use pageX and pageY
-      $('#popup').css('top',event.pageY);
-      $('#popup').css('display','inline');
-      $('#popup').css('position', 'absolute');  // <<< also make it absolute!
-
-      setTimeout(function(){
-        $('#popup').css('display','none');
-        $('#hilit-button').text('Hilit');
-      }, 2000);
-
-    }
-
   });
+
+
+
  //$('body').append('Test');
  var doHighlight = function (element, start, end) { 
    console.log( 'highlight ....' + 'start: '  + start +  ' end: ' + end);

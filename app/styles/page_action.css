@@ -4,6 +4,12 @@
   width: 400px;
   font-family: Helvetica, Ubuntu, Arial, sans-serif;
 }
-h1 {
+#title-header {
   font-size: 2em;
+  float :right;
+}
+
+#form-activate{ 
+  /* hidden by default, show it later */
+  display: none;
 }

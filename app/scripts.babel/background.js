@@ -105,7 +105,9 @@ var loadHighlight = function(highlightId, callback){
   $.ajax({
     url: 'http://' +  SERVER + '/api/highlights/' + highlightId + '.json',
     beforeSend: function (xhr) {
-      xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password )); 
+      if (currentUser) {
+        xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password )); 
+      }
       xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
     },
     //context: document.body
@@ -129,7 +131,9 @@ var loadHighlights = function(url, callback){
   $.ajax({
     url: 'http://' +  SERVER + '/api/highlights.json?' + '&protocol=' + parser.protocol + '&hostname=' + parser.hostname + '&pathname=' + parser.pathname + '&search=' + parser.search  + '&pathname_hash' + parser.hash ,
     beforeSend: function (xhr) {
-      xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password )); 
+      if (currentUser) {
+        xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password )); 
+      }
       xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
     },
     //context: document.body
@@ -138,7 +142,7 @@ var loadHighlights = function(url, callback){
     //console.log(output);
     callback(output);
   }).fail(function(error){
-    console.eror('loadHighlights error');
+    console.error('loadHighlights error:');
     console.error( error );
    callback(error);
   });
@@ -155,6 +159,9 @@ var doHighlight = function(tab, object, callback) {
 
 
 var createHighlight = function(obj, callback){
+  if (!currentUser) {
+    callback(new Error({message: 'you need to login'}));
+  }
   console.log( 'background.js ' + ' createHighlight' );
   $.ajax({
     method: 'POST',
@@ -242,6 +249,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
     response({'asdf': '234234234'});
 
   }
+
+  if (request.source === 'inject.js' && request.type === 'is_url_hiliteable'){
+    loadHighlights(request.object.href,function(data){
+      response({result: data.length > 0});
+    });
+  }
+
 
   if (request.source === 'inject.js' && request.type === 'create'){
     createHighlight( request.object, function(output){
