@@ -235,7 +235,7 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 
 chrome.runtime.onMessage.addListener(function (request, sender, response) {
 
-  console.log('request');
+  console.log('background.js incoming message from: ' +  request.source );
   console.log(request);
   console.log('sender');
   console.log(sender);
@@ -270,13 +270,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
   if (request.source === 'page_action.js' && request.type === 'activate'){
     chrome.tabs.getSelected(null, function(tab) {
       var tabUrl = tab.url;
+      chrome.tabs.sendMessage(tab.id,{source: 'background.js', type: 'activate'}, function(response) {
+        chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/icon-19.png' });
+      });
       //window.alert(tab.id);
 /*
       chrome.tabs.executeScript(tab.id, { file: 'bower_components/jquery/dist/jquery.min.js' });
       chrome.tabs.executeScript(tab.id, { file: 'scripts/get-selector.js' });
       chrome.tabs.executeScript(tab.id, { file: 'scripts/inject.js' });
 */
-      chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/icon-19.png' });
     });
   }
   console.log('return true'); 

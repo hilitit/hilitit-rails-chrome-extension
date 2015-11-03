@@ -58,8 +58,13 @@ var getCurrentURL = function(){
   injectPopup();
 
   chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    console.log( '  inject.js ' );
+    console.log( '  inject.js incoming message ... ' );
     console.log( request );
+
+   if (request.source === 'background.js' && request.type === 'activate'){
+     activateSelectDetection();
+   }
+
    if (request.source === 'background.js' && request.type === 'highlight'){
      var h = request.object;
      //var el = $('#second > .texto');
