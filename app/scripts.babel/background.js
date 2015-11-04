@@ -106,6 +106,7 @@ var isTabAWebPage = function(tab){
 var isTabHilitable = function(tab,callback){
   var dic = parseUrl(tab.url);
   var isHilitable = dic.protocol === 'http:';
+  console.log('background.js isTabHilitable: ' + isHilitable);
   callback(isHilitable);
 };
 
@@ -260,6 +261,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   chrome.tabs.get(tabId, function(tab){
      console.log(tab);
      loadHighlights(tab.url, function(data){
+      showPageOptionsIconForData( data );
        console.log('background.js tabs.onUpdated loadHighlights.length: ' +  data.length );
        if ( data.length > 0 ){
          //chrome.pageAction.setIcon({'tabId':tabId, 'path':'images/icon-38.png' });
@@ -320,7 +322,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
   if (request.source === 'inject.js' && request.type === 'is_url_hiliteable'){
     loadHighlights(request.object.href,function(data){
       showPageOptionsIconForData( data );
-      response({result: data.length > 0});
+      response({result: data.length > 0 && isLoggedIn});
     });
   }
 

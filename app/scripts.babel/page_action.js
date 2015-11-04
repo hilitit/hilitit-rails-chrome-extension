@@ -7,8 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   var backGround = chrome.extension.getBackgroundPage();
-  backGround.queryActiveTab(function(tab){
-    console.log( 'page_action.js queryActiveTab response' );
+  var doLoadHighlights = function(tab){
 
     backGround.loadHighlights(tab.url,function(data){
 
@@ -42,18 +41,24 @@ document.addEventListener('DOMContentLoaded', function () {
             });
           });
         });
-        /*
-        backGround.doHighlight( tab, object ,function(response) {
-          console.log('response - - - - - - - ');
-          console.log(response);
-          chrome.runtime.sendMessage({source: 'page_action.js', type:'log', message: 'response - - - - '});
-
-
-        });
-*/
 
       });
     });
+  };
+
+  backGround.queryActiveTab(function(tab){
+    console.log( 'page_action.js queryActiveTab response' );
+
+    backGround.isTabHilitable(tab,function(isHilitable){
+      console.log('page_action.js isTabHilitable: ' + isHilitable);
+      if (isHilitable){
+        doLoadHighlights(tab);
+      } else {
+        $('#message').text('This page is not hilitable');
+        $('#form-activate').hide();
+      }
+    });
+
   });
 
 

@@ -98,6 +98,7 @@ var getCurrentURL = function(){
   var currentSelection = null;
 
   var activateSelectDetection = function(){
+    console.log( 'inject.js activateSelectDetection');
     $('*').mouseup(function(event) {
 
       var selection;
