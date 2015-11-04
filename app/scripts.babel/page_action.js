@@ -8,8 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var backGround = chrome.extension.getBackgroundPage();
   backGround.queryActiveTab(function(tab){
-    console.log( 'query response' );
-
+    console.log( 'page_action.js queryActiveTab response' );
 
     backGround.loadHighlights(tab.url,function(data){
 

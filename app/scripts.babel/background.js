@@ -45,6 +45,17 @@ var doLogin = function(req, callback){
   });
 };
 
+var flashPageActionIconForTab = function(tab){
+  var colors = ['blue', 'red' , 'clear', 'green' , 'blue', 'red' , 'clear', 'green'];
+  var counter = 0;
+  var interval = null;
+  interval = setInterval(function(){
+    chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/Marker-' + colors[counter++] + '-38.png' });
+    if (counter === colors.length){
+      clearInterval(interval);
+    }
+  },800);
+};
 
 chrome.runtime.onInstalled.addListener(details => {
   console.log('previousVersion', details.previousVersion);
@@ -81,6 +92,22 @@ var doLogout = function(callback){
   });
 };
 
+var parseUrl = function(url){
+  var parsed = document.createElement('a');
+  parsed.href = url;
+  return parsed;
+};
+
+var isTabAWebPage = function(tab){
+  var dic = parseUrl(tab.url);
+  return dic.protocol === 'http:' || dic.protocol === 'https:';
+};
+
+var isTabHilitable = function(tab,callback){
+  var dic = parseUrl(tab.url);
+  var isHilitable = dic.protocol === 'http:';
+  callback(isHilitable);
+};
 
 var queryActiveTab = function(callback){
   console.log( 'queryActiveTab' );
@@ -90,8 +117,7 @@ var queryActiveTab = function(callback){
   }, function(arrayOfTabs) {
     var tab = arrayOfTabs[0];
     var url = tab.url;
-    console.log( 'url:' );
-    console.log( url );
+    console.log( 'background.js queryActiveTab url:' + url );
     callback( tab );
   });
 };
@@ -148,6 +174,47 @@ var loadHighlights = function(url, callback){
   });
 };
 
+
+var showPageOptionsIconForData = function(data ){
+  console.log('background.js showPageOptionsIconForData isLoggedIn: ' + isLoggedIn);
+  queryActiveTab(function(tab){
+
+    var isWebPage = isTabAWebPage( tab );
+    console.log( 'background.js isTabAWebPage: ' + isWebPage );
+    if (!isWebPage) {
+      chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/Marker-clear-38.png' });
+      return;
+    }
+   
+
+    isTabHilitable(tab, function(isHilitable){
+      console.log( 'background.js showPageOptionsIconForData isTabHilitable: ' + isHilitable );
+      if (!isHilitable){
+        console.log( 'background.js showPageOptionsIconForData !isTabHilitable');
+         chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/Marker-stop-38.png' });
+         return;
+      }
+      if (isLoggedIn && data.length > 0){
+        console.log( 'background.js showPageOptionsIconForData isTabHilitable,isLoggedIn,data.length > 0');
+        //flash green
+        flashPageActionIconForTab(tab);
+      }
+      if (!isLoggedIn && data.length === 0){
+        console.log( 'background.js showPageOptionsIconForData isTabHilitable,!isLoggedIn,data.length === 0');
+        chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/Marker-clear-38.png' });
+      }
+      if (!isLoggedIn && data.length > 0){
+        console.log( 'background.js showPageOptionsIconForData isTabHilitable,!isLoggedIn,data.length > 0');
+        chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/Marker-green-38.png' });
+      }
+      if (isLoggedIn && data.length === 0){
+        console.log( 'background.js showPageOptionsIconForData isTabHilitable,isLoggedIn,data.length === 0');
+        chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/Marker-blue-38.png' });
+      }
+    });
+  });
+};
+
 var doHighlight = function(tab, object, callback) {
   chrome.tabs.sendMessage(tab.id,{source: 'background.js', type: 'highlight', object: object}, function(response) {
     console.log('response + + + + + +');
@@ -195,7 +262,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
      loadHighlights(tab.url, function(data){
        console.log('background.js tabs.onUpdated loadHighlights.length: ' +  data.length );
        if ( data.length > 0 ){
-         chrome.pageAction.setIcon({'tabId':tabId, 'path':'images/icon-38.png' });
+         //chrome.pageAction.setIcon({'tabId':tabId, 'path':'images/icon-38.png' });
        }
      });
   });
@@ -226,7 +293,7 @@ chrome.tabs.onCreated.addListener(function( tab) {
 chrome.pageAction.onClicked.addListener(function(tab) {
   console.log('Turning ' + tab.url + ' red!');
   console.log('background.js pageAction.onClicked');
-  chrome.pageAction.setIcon({'tabId':tab.tabId, 'path':'images/icon-19.png' });
+  //chrome.pageAction.setIcon({'tabId':tab.tabId, 'path':'images/icon-19.png' });
 
   chrome.pageAction.show(tab.id);
 
@@ -252,6 +319,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
 
   if (request.source === 'inject.js' && request.type === 'is_url_hiliteable'){
     loadHighlights(request.object.href,function(data){
+      showPageOptionsIconForData( data );
       response({result: data.length > 0});
     });
   }
@@ -271,7 +339,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
     chrome.tabs.getSelected(null, function(tab) {
       var tabUrl = tab.url;
       chrome.tabs.sendMessage(tab.id,{source: 'background.js', type: 'activate'}, function(response) {
-        chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/icon-19.png' });
+        //chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/icon-19.png' });
       });
       //window.alert(tab.id);
 /*
