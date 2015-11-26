@@ -19,6 +19,11 @@
   width: 250px;
 }
 
+#login-error{
+ font-size: 15px;
+ color: red;
+}
+
 #register-button{
   width: 250px;
 }

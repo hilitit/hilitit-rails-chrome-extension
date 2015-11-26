@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(output);
             if (output.error && output.responseText ) {
               console.error('options.js login failure');
-              $('#login-message').text(output.responseJSON.error);
+              $('#login-error').text(output.responseJSON.error);
             }
             checkUI();
           });
