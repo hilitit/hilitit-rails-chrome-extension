@@ -28,12 +28,16 @@ document.addEventListener('DOMContentLoaded', function () {
         //console.log(key);
         //console.log(object);
 
-        var h = $.parseHTML( '<li class="highlight" id="hi-' +  object.id  + '">' + object.id + ' ' +  object.user_id  + '</li>' );
+        var h = $.parseHTML( '<li class="highlight" id="hi-' +  object.id  + '">' + object.text.substr(0,20)  + '</li>' );
         $( '#highlights-list' ).append(  h );
         $( '#hi-' + object.id).click(function() {
+          if ( object.isHighlighted ){
+            return;
+          }
           console.log( 'Handler for .click() called.' );
           backGround.loadHighlight( object.id ,function(object2){
             backGround.doHighlight( tab, object2 ,function(response) {
+              object.isHighlighted = true;
               console.log('response - - - - - - - ');
               console.log(response);
               chrome.runtime.sendMessage({source: 'page_action.js', type:'log', message: 'response - - - - '});
