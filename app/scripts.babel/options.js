@@ -1,6 +1,6 @@
 'use strict';
 
-var REGISTER_URL = 'https://www.hilit.it/users/sign_up';
+var REGISTER_URL = 'https://www.wehighlight.com/users/sign_up';
 
 document.addEventListener('DOMContentLoaded', function () {
   console.log('\'Allo \'Allo! Option');
