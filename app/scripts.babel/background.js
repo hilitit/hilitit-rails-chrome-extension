@@ -1,7 +1,7 @@
 'use strict';
 
 //var SERVER='127.0.0.1:9002';
-var SERVER='www.hilit.it';
+var SERVER='www.wehighlight.com';
 var HILITIT_USER='hilit_it_user';
 var HILITIT_PASS='hilit_it_pass';
 var isLoggedIn = false;
