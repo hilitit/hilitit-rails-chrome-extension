@@ -1,7 +1,7 @@
 'use strict';
 
 //var SERVER='127.0.0.1:9002';
-var SERVER='www.wehighlight.com';
+var SERVER = 'www.wehighlight.com';
 var HILITIT_USER='hilit_it_user';
 var HILITIT_PASS='hilit_it_pass';
 var isLoggedIn = false;
@@ -106,7 +106,7 @@ var isTabAWebPage = function(tab){
 
 var isTabHilitable = function(tab,callback){
   var dic = parseUrl(tab.url);
-  var isHilitable = dic.protocol === 'http:';
+  var isHilitable = dic.protocol === 'http:' || dic.protocol === 'https:';
   console.log('background.js isTabHilitable: ' + isHilitable);
   callback(isHilitable);
 };
@@ -341,7 +341,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
   if (request.source === 'page_action.js' && request.type === 'activate'){
     chrome.tabs.getSelected(null, function(tab) {
       var tabUrl = tab.url;
-      chrome.tabs.sendMessage(tab.id,{source: 'background.js', type: 'activate'}, function(response) {
+      chrome.tabs.sendMessage(tab.id,{source: 'background.js', type: 'activate'}, function(respo) {
+        response();
         //chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/icon-19.png' });
       });
       //window.alert(tab.id);

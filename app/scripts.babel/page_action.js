@@ -81,9 +81,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   $('#activate').change(function(dd){
-    console.log('Allo!! ');
+    console.log('Allo!! page_action send message activate ');
     chrome.runtime.sendMessage({source: 'page_action.js',type:'activate'}, function resp(re){
+      console.log('Allo!! page_action receive response for activate ');
       console.log('Allo!! Popup 2');
+      $('#form-activate').hide();
     });
 
   });
