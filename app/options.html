@@ -6,18 +6,29 @@
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css styles/main.css -->
+    <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="styles/options.css" rel="stylesheet">
     <!-- endbuild -->
+    <style>
+    @font-face {
+      font-family: myFirstFont;
+      src: url();
+    }
+    div {
+      font-family: myFirstFont;
+    }
+
+    </style>
   </head>
   <body>
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
     <div id="all">
-
 
     <div id="login">
       <h3>Please Login</h3>
@@ -25,19 +36,22 @@
       <div id="login-message"></div>
       <div id="login-error"></div>
 
-      <form id="login-form" action="">
-        <label for="username">username</label>
-        <input name="username" id="username" placeholder="username" value=""/>
-        <br/>
-        <label for="password">password</label>
-        <input name="password" id="password" type="password" placeholder="password" value=""/>
-        <br/>
-        <input type="submit" id="login-button" value="Login">
+      <form id="login-form" action="" class="form-horizontal" role="form">
+        <div class="form-group">
+          <label for="username">username</label>
+          <input name="username" id="username" placeholder="username" value=""/>
+        </div>
+        <div class="form-group">
+          <label for="password">password</label>
+          <input name="password" id="password" type="password" placeholder="password" value=""/>
+        </div>
+
+        <input type="submit" id="login-button" value="Login" class="btn btn-primary">
       </form>
 
       <form id="register-form" action="">
         <div id="email"></div>
-        <input type="submit" id="register-button" value="Create new account">
+        <input type="submit" id="register-button" value="Create new account"  class="btn btn-info">
       </form>
     </div>
 
