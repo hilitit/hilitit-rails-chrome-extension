@@ -46,19 +46,26 @@
           <input name="password" id="password" type="password" placeholder="password" value=""/>
         </div>
 
-        <input type="submit" id="login-button" value="Login" class="btn btn-primary">
+        <input type="submit" id="login-button" value="Login" class="btn btn-default">
       </form>
 
       <form id="register-form" action="">
-        <div id="email"></div>
-        <input type="submit" id="register-button" value="Create new account"  class="btn btn-info">
+        <input type="submit" id="register-button" value="Create new account"  class="btn btn-default">
       </form>
     </div>
 
-    <div id="logout">
-      <form id="logout-form" action="">
-        <div id="email"></div>
-        <input type="submit" id="logout-button" value="Logout">
+
+    <div id="done" class="well row">
+      <form id="done-form" action="" class="col-sm-offset-2 col-sm-2">
+        <input type="submit" id="done-button" value="Close this tab and Proceed ...">
+      </form>
+    </div>
+
+    <div id="logout" class="well row">
+
+      <form id="logout-form" action="" >
+        <div id="email"class="col-sm-offset-2 col-sm-2"></div>
+        <input type="submit" id="logout-button" value="Logout" class="col-sm-offset-2 col-sm-2">
       </form>
     </div>
 

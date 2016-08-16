@@ -1,13 +1,15 @@
 #mainPopup {
-  padding: 10px;
-  height: 200px;
-  width: 400px;
+  padding: 15px;
+  height: 250px;
+  width: 500px;
   font-family: Helvetica, Ubuntu, Arial, sans-serif;
 }
+/*
 #title-header {
   font-size: 2em;
   float :right;
 }
+*/
 
 #form-activate{ 
   /* hidden by default, show it later */
