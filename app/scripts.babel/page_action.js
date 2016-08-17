@@ -13,11 +13,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if ( data.length === 0 ){
         if ( backGround.isLoggedIn ){
-          $('#message').text('No previous hilits, would you like to be the first?');
+          $('#message').text('No previous highlights, Wanna be the first?');
           $('#form-activate').show();
         } else {
           console.log('page_action, we have a guest and no previous highlights !');
-          $('#message').text('No previous hilits, to create hilits please login first.');
+          $('#message').text('No previous highlights, to highlight please login first.');
         }
       } else {
         $('#message').text('');

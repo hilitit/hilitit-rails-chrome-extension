@@ -12,14 +12,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (background.isLoggedIn){
       console.log('user is logged in');
+      console.log( background.currentUser.username );
       $('#login').hide();
       $('#logout').show();
-      $('#email').text(background.currentUser.email);
+      $('#done').show();
+      $('#email').text(background.currentUser.username);
     } else {
       console.log('user is logged out');
       $('#logout').hide();
+      $('#done').hide();
       $('#login').show();
       $('#email').text('');
+
     }
 
   };
@@ -56,11 +60,19 @@ document.addEventListener('DOMContentLoaded', function () {
     event.preventDefault();
     login();
   });
+
+  $('#done-form').submit(function(event){
+    console.log('login-form done');
+    event.preventDefault();
+    window.close();
+  });
+
   $('#logout-form').submit(function(event){
     console.log('login-form logout');
     event.preventDefault();
     logout();
   });
+
   $('#register-form').submit(function(event){
     console.log('register-form logout');
     event.preventDefault();
