@@ -1,6 +1,5 @@
 'use strict';
 
-//var SERVER='127.0.0.1:9002';
 var SERVER = 'www.wehighlight.com';
 var HILITIT_USER='hilit_it_user';
 var HILITIT_PASS='hilit_it_pass';
@@ -19,7 +18,7 @@ var doLogin = function(req, callback){
   $.ajax({
     method: 'POST',
     beforeSend: function (xhr) {
-      xhr.setRequestHeader ('Authorization', makeBaseAuth(req.username , req.password )); 
+      xhr.setRequestHeader ('Authorization', makeBaseAuth(req.username , req.password ));
       xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
     },
     url: 'http://' + SERVER + '/api/sessions',
@@ -117,10 +116,10 @@ var queryActiveTab = function(callback){
     active: true,               // Select active tabs
     lastFocusedWindow: true     // In the current window
   }, function(arrayOfTabs) {
-    var tab = arrayOfTabs[0];
-    var url = tab.url;
-    console.log( 'background.js queryActiveTab url:' + url );
-    callback( tab );
+      var tab = arrayOfTabs[0];
+      var url = tab.url;
+      console.log( 'background.js queryActiveTab url:' + url );
+      callback( tab );
   });
 };
 
@@ -134,7 +133,7 @@ var loadHighlight = function(highlightId, callback){
     url: 'http://' +  SERVER + '/api/highlights/' + highlightId + '.json',
     beforeSend: function (xhr) {
       if (currentUser) {
-        xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password )); 
+        xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password ));
       }
       xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
     },
@@ -153,14 +152,14 @@ var loadHighlight = function(highlightId, callback){
 
 var loadHighlights = function(url, callback){
   console.log('loadHighlights for url:  ' + url );
-  var parser = document.createElement('a');
-  parser.href = url;
+  var parser = parseUrl( url );
   //console.log( currentUser.username + ':' + currentUser.password );
+  var protocol = parser.protocol.replace(":","");
   $.ajax({
-    url: 'http://' +  SERVER + '/api/highlights.json?' + '&protocol=' + parser.protocol + '&hostname=' + parser.hostname + '&pathname=' + parser.pathname + '&search=' + parser.search  + '&pathname_hash' + parser.hash ,
+    url: 'http://' +  SERVER + '/api/highlights.json?' + '&protocol=' + protocol + '&hostname=' + parser.hostname + '&pathname=' + parser.pathname + '&search=' + parser.search  + '&pathname_hash=' + parser.hash ,
     beforeSend: function (xhr) {
       if (currentUser) {
-        xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password )); 
+        xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password ));
       }
       xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
     },
@@ -187,7 +186,7 @@ var showPageOptionsIconForData = function(data ){
       chrome.pageAction.setIcon({'tabId':tab.id, 'path':'images/Marker-clear-38.png' });
       return;
     }
-   
+
 
     isTabHilitable(tab, function(isHilitable){
       console.log( 'background.js showPageOptionsIconForData isTabHilitable: ' + isHilitable );
@@ -239,7 +238,7 @@ var createHighlight = function(obj, callback){
     dataType: 'json',
     url: 'http://' + SERVER + '/api/highlights.json',
     beforeSend: function (xhr) {
-      xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password )); 
+      xhr.setRequestHeader ('Authorization', makeBaseAuth( currentUser.username , currentUser.password ));
       xhr.setRequestHeader ( 'Accept', 'application/vnd.hilitit.v1' );
     },
     //context: document.body
@@ -285,7 +284,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 
 });
 
-chrome.tabs.onCreated.addListener(function( tab) {         
+chrome.tabs.onCreated.addListener(function( tab) {
   console.log('onCreated: ' + ' ' + tab.tabId + ' ' + tab.url);
   console.log( tab );
 });
@@ -353,8 +352,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
 */
     });
   }
-  console.log('return true'); 
-  return true; 
+  console.log('return true');
+  return true;
 });
 
 
