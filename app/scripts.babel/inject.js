@@ -5,9 +5,11 @@ var getCurrentURL = function(){
 
   var parser = document.createElement('a');
   parser.href = window.location.href;
+
+  var protocol = parser.protocol.replace(/:$/,"");
   var currentURL = {
     'href': window.location.href,
-    'protocol': parser.protocol, // => "http:"
+    'protocol': protocol, // => "http"
     'hostname': parser.hostname, // => "example.com"
     'port' : parser.port,     // => "3000"
     'pathname' : parser.pathname, // => "/pathname/"
@@ -121,13 +123,14 @@ var getCurrentURL = function(){
 
         var parser = document.createElement('a');
         parser.href = window.location.href;
+        var protocol = parser.protocol.replace(/:$/,"");
         currentSelection = {
           'selector': selector,
           'text': selection.toString() ,
           'href': window.location.href,
           'start_offset': selRange.startOffset,
           'end_offset': selRange.endOffset,
-          'protocol': parser.protocol, // => "http:"
+          'protocol': protocol, // => "http:"
           'hostname': parser.hostname, // => "example.com"
           'port' : parser.port,     // => "3000"
           'pathname' : parser.pathname, // => "/pathname/"
