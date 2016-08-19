@@ -71,8 +71,13 @@ var getCurrentURL = function(){
      var h = request.object;
      //var el = $('#second > .texto');
      //var el = $( h.selector );
-     var el = $(  h.tag_name + ':contains(' + h.text + ')' );
-     //el.append('HEY ');
+
+     console.log( "inject.js: " + h.selector + ' --> matches ' + $(h.selector).length + ' element');
+
+     var el = $(  h.selector + ':contains(' + h.text + ')' );
+     console.log( "inject.js: " +  el );
+     console.log( el );
+     el.append('HEY ');
      //console.log( el.text()  );
      //console.log( el.html() );
      //highlight(el, 10,20);
@@ -166,19 +171,19 @@ var getCurrentURL = function(){
 
  //$('body').append('Test');
  var doHighlight = function (element, start, end) { 
-   console.log( 'highlight ....' + 'start: '  + start +  ' end: ' + end);
+   console.log( 'inject.js: highlight ....' + 'start: '  + start +  ' end: ' + end);
    var str1 = element.html();
-   console.log( 'str:' + str1 );
-   var s1 = '<span class="hilited">';
-   var s2 = '</span>';
+   console.log( 'inject.js: str:' + str1 );
+   var s1 = '<spanx class="hilited">';
+   var s2 = '</spanx>';
    var str2 = str1.substr(0, start) +
      s1 +
-     //' [ ' + 
+     ' [ ' + 
      str1.substr(start, end - start + 1) +
-     //'  ] ' +
+     '  ] ' +
      s2 +
      str1.substr(end + 1);
-   //console.log( str1 );
+   console.log( str1 );
    element.html( str2 );
  };
 /*
