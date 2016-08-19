@@ -128,7 +128,7 @@ var queryActiveTab = function(callback){
 
 var loadHighlight = function(highlightId, callback){
 
-  console.log('loadHighlight for id:  ' + highlightId );
+  console.log('background.js =>  loadHighlight for id:  ' + highlightId );
   $.ajax({
     url: 'http://' +  SERVER + '/api/highlights/' + highlightId + '.json',
     beforeSend: function (xhr) {
@@ -139,11 +139,11 @@ var loadHighlight = function(highlightId, callback){
     },
     //context: document.body
   }).done(function(output) {
-    console.log('loadHighlight success ');
+    console.log('background.js => loadHighlight success ');
     console.log(output);
     callback(output);
   }).fail(function(error){
-    console.error('loadHighlight error');
+    console.error('background.js => loadHighlight error');
     console.error( error );
    callback(error);
   });

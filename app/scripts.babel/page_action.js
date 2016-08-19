@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if ( data.length === 0 ){
         if ( backGround.isLoggedIn ){
-          $('#message').text('No previous highlights, Wanna be the first?');
+          console.log('page_action: we have a logged in user, and no previous highlights !');
+          $('#message').text('No previous highlights, Be the first!');
           $('#form-activate').show();
         } else {
           console.log('page_action, we have a guest and no previous highlights !');
@@ -36,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
           }
           console.log( 'Handler for .click() called.' );
           backGround.loadHighlight( object.id ,function(object2){
+
             backGround.doHighlight( tab, object2 ,function(response) {
               object.isHighlighted = true;
               console.log('response - - - - - - - ');
